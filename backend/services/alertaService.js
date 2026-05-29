@@ -148,7 +148,7 @@ async function enviarAlertas(
 
                         'gleidson.oliveira@nossoatacarejo.com.br',
                         'pisomn@nossoatacarejo.com.br',
-                        'paulo17122023@gmail.com'
+                        'paulo1712023@gmail.com'
                     ];
                 }
 
@@ -158,7 +158,7 @@ async function enviarAlertas(
 
                         'gleidson.oliveira@nossoatacarejo.com.br',
                         'pisomn@nossoatacarejo.com.br',
-                        'paulo17122023@gmail.com'
+                        'paulo1712023@gmail.com'
                     ];
                 }
 
@@ -167,7 +167,7 @@ async function enviarAlertas(
                     destinatarios = [
                         'gleidson.oliveira@nossoatacarejo.com.br',
                         'pisomn@nossoatacarejo.com.br',
-                        'paulo17122023@gmail.com'
+                        'paulo1712023@gmail.com'
                     ];
                 }
 
