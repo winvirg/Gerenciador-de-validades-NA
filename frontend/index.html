@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Gerenciador de Validades</title>
+
+    <!-- FONTES -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- ÍCONES -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    >
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- DECORAÇÃO -->
+    <div class="dots-left">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+    </div>
+
+    <div class="dots-right">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+    </div>
+
+    <!-- HEADER -->
+    <header>
+
+        <div class="header-brand">
+
+            <div class="header-logo">
+                <i class="fas fa-calendar-check"></i>
+            </div>
+
+            <div class="header-title">
+                Gerenciador de <span>Validades</span>
+            </div>
+
+        </div>
+
+        <div
+            style="
+                display:flex;
+                align-items:center;
+                gap:15px;
+            "
+        >
+
+            <button
+                class="btn-outline"
+                id="btnLogin"
+            >
+                <i class="fas fa-lock"></i>
+                Login Admin
+            </button>
+
+            <button
+                class="btn-danger-outline"
+                id="btnLogout"
+                style="display:none;"
+            >
+                <i class="fas fa-right-from-bracket"></i>
+                Sair
+            </button>
+
+            <div class="header-logo-image">
+
+                <img
+                    src="assets/logo.png"
+                    alt="Logo"
+                    id="siteLogo"
+                >
+
+            </div>
+
+        </div>
+
+    </header>
+
+    <!-- MAIN -->
+    <main>
+
+        <!-- ESTATÍSTICAS -->
+        <div class="stats-grid">
+
+            <div class="stat-card">
+
+                <div class="stat-icon total">
+                    <i class="fas fa-boxes-stacked"></i>
+                </div>
+
+                <div class="stat-info">
+                    <h3 id="statTotal">0</h3>
+                    <p>Total de Itens</p>
+                </div>
+
+            </div>
+
+            <div class="stat-card">
+
+                <div class="stat-icon ok">
+                    <i class="fas fa-circle-check"></i>
+                </div>
+
+                <div class="stat-info">
+                    <h3 id="statOk">0</h3>
+                    <p>No Prazo</p>
+                </div>
+
+            </div>
+
+            <div class="stat-card">
+
+                <div class="stat-icon alert">
+                    <i class="fas fa-triangle-exclamation"></i>
+                </div>
+
+                <div class="stat-info">
+                    <h3 id="statAlert">0</h3>
+                    <p>Próx. Vencimento</p>
+                </div>
+
+            </div>
+
+            <div class="stat-card">
+
+                <div class="stat-icon danger">
+                    <i class="fas fa-circle-xmark"></i>
+                </div>
+
+                <div class="stat-info">
+                    <h3 id="statDanger">0</h3>
+                    <p>Vencidos</p>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- TOOLBAR -->
+        <div class="toolbar">
+
+            <h1>
+                <i class="fas fa-warehouse"></i>
+                Controle de Produtos
+            </h1>
+
+            <div class="toolbar-actions">
+
+                <!-- BUSCA -->
+                <div class="search-box">
+
+                    <i class="fas fa-search"></i>
+
+                    <input
+                        type="text"
+                        id="searchInput"
+                        class="search-bar"
+                        placeholder="Buscar produto..."
+                    >
+
+                </div>
+
+                <!-- ALERTA -->
+                <select
+                    class="filter-select"
+                    id="alertDays"
+                >
+                    <option value="30">Alerta 30 dias</option>
+                    <option value="15">Alerta 15 dias</option>
+                    <option value="7">Alerta 7 dias</option>
+                    <option value="3">Alerta 3 dias</option>
+                </select>
+
+                <!-- FILTRO -->
+                <select
+                    class="filter-select"
+                    id="filterStatus"
+                >
+                    <option value="todos">
+                        Todos os Status
+                    </option>
+
+                    <option value="ok">
+                        No Prazo
+                    </option>
+
+                    <option value="alert">
+                        Próx. ao Vencimento
+                    </option>
+
+                    <option value="danger">
+                        Vencidos
+                    </option>
+
+                </select>
+
+                <!-- INPUT IMPORTAÇÃO -->
+                <input
+                    type="file"
+                    id="fileInput"
+                    accept=".csv,.txt"
+                    style="display:none"
+                >
+
+                <!-- IMPORTAR -->
+                <button
+                    class="btn-outline"
+                    id="btnImportar"
+                    style="display:none"
+                >
+                    <i class="fas fa-file-import"></i>
+                    Importar
+                </button>
+
+                <!-- IMPRIMIR -->
+                <button
+                    class="btn-outline"
+                    id="btnImprimir"
+                >
+                    <i class="fas fa-print"></i>
+                    Imprimir
+                </button>
+
+                <!-- NOVO -->
+                <button
+                    class="btn-yellow"
+                    id="btnNovo"
+                    style="display:none"
+                >
+                    <i class="fas fa-plus"></i>
+                    Novo Produto
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- GRID -->
+        <div
+            class="products-grid"
+            id="productsGrid"
+        ></div>
+
+    </main>
+
+    <!-- MODAL -->
+    <div
+        class="modal-overlay"
+        id="modalOverlay"
+    >
+
+        <div class="modal">
+
+            <div class="modal-header">
+
+                <h2 id="modalTitle">
+                    <i class="fas fa-box"></i>
+                    Novo Produto
+                </h2>
+
+                <button
+                    class="modal-close"
+                    id="btnFechar"
+                >
+                    <i class="fas fa-times"></i>
+                </button>
+
+            </div>
+
+            <form id="formProduto">
+
+                <input
+                    type="hidden"
+                    id="produtoId"
+                >
+
+                <div class="form-group">
+
+                    <label>
+                        Nome do Produto
+                    </label>
+
+                    <input
+                        type="text"
+                        id="nomeProduto"
+                        required
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>
+                        Localização
+                    </label>
+
+                    <input
+                        type="text"
+                        id="localProduto"
+                        required
+                    >
+
+                </div>
+
+                <div class="form-group row">
+
+                    <div>
+
+                        <label>Quantidade</label>
+
+                        <input
+                            type="number"
+                            id="qtdProduto"
+                            required
+                        >
+
+                    </div>
+
+                    <div>
+
+                        <label>Cód/Lote</label>
+
+                        <input
+                            type="text"
+                            id="loteProduto"
+                        >
+
+                    </div>
+
+                </div>
+
+                <div class="form-group row">
+
+                    <div>
+
+                        <label>Status</label>
+
+                        <input
+                            type="text"
+                            id="statusProduto"
+                        >
+
+                    </div>
+
+                    <div>
+
+                        <label>Validade</label>
+
+                        <input
+                            type="date"
+                            id="dataProduto"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+                <div class="modal-buttons">
+
+                    <button
+                        type="button"
+                        class="btn-cancel"
+                        id="btnCancelar"
+                    >
+                        Cancelar
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn-yellow"
+                    >
+                        <i class="fas fa-save"></i>
+                        Salvar
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- TOAST -->
+    <div
+        class="toast"
+        id="toast"
+    >
+
+        <i class="fas fa-check-circle"></i>
+
+        <span id="toastMessage">
+            Ação realizada!
+        </span>
+
+    </div>
+
+    <!-- MODAL LOGIN -->
+    <div class="modal-overlay" id="loginOverlay">
+
+        <div class="modal">
+
+            <div class="modal-header">
+
+                <h2>
+                    <i class="fas fa-lock"></i>
+                    Login Administrativo
+                </h2>
+
+                <button
+                    class="modal-close"
+                    id="btnFecharLogin"
+                    type="button"
+                >
+                    <i class="fas fa-times"></i>
+                </button>
+
+            </div>
+
+            <form id="formLogin">
+
+                <div class="form-group">
+
+                    <label>
+                        Usuário
+                    </label>
+
+                    <input
+                        type="text"
+                        id="loginUser"
+                        placeholder="Digite o usuário"
+                        required
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>
+                        Senha
+                    </label>
+
+                    <input
+                        type="password"
+                        id="loginPass"
+                        placeholder="Digite a senha"
+                        required
+                    >
+
+                </div>
+
+                <div class="modal-buttons">
+
+                    <button
+                        type="submit"
+                        class="btn-yellow"
+                    >
+                        <i class="fas fa-right-to-bracket"></i>
+                        Entrar
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- JS -->
+    <script src="js/states.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/alertas.js"></script>
+    <script src="js/modal.js"></script>
+    <script src="js/produtos.js"></script>
+    <script src="js/render.js"></script>
+    <script src="js/importacao.js"></script>
+    <script src="js/impressao.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/app.js"></script>
+
+</body>
+</html>

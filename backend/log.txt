@@ -1,0 +1,2 @@
+Servidor rodando na porta 3000
+Banco SQLite conectado.
