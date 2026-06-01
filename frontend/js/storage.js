@@ -1,5 +1,22 @@
 const API_URL =
-    'http://10.7.80.7:3000/produtos';
+    `${API_BASE}/produtos`;
+
+function obterHeaders(){
+
+    const token =
+        localStorage.getItem(
+            'admin_token'
+        );
+
+    return {
+
+        'Content-Type':
+            'application/json',
+
+        authorization:
+            token || ''
+    };
+}
 
 async function carregarProdutos() {
 
@@ -33,10 +50,8 @@ async function salvarProduto(produto) {
 
                 method: 'POST',
 
-                headers: {
-                    'Content-Type':
-                        'application/json'
-                },
+                headers:
+                    obterHeaders(),
 
                 body: JSON.stringify(
                     produto
@@ -69,10 +84,8 @@ async function atualizarProduto(
 
                 method: 'PUT',
 
-                headers: {
-                    'Content-Type':
-                        'application/json'
-                },
+                headers:
+                    obterHeaders(),
 
                 body: JSON.stringify(
                     produto
@@ -98,7 +111,15 @@ async function deletarProduto(id){
         await fetch(
             `${API_URL}/${id}`,
             {
-                method:'DELETE'
+                method:'DELETE',
+
+                headers: {
+
+                    authorization:
+                        localStorage.getItem(
+                            'admin_token'
+                        ) || ''
+                }
             }
         );
 
@@ -108,25 +129,6 @@ async function deletarProduto(id){
 
         mostrarToast(
             'Erro ao deletar',
-            'error'
-        );
-    }
-}
-
-async function deletarTodosProdutos(){
-
-    try {
-
-        await fetch(API_URL, {
-            method: 'DELETE'
-        });
-
-    } catch(err){
-
-        console.error(err);
-
-        mostrarToast(
-            'Erro ao limpar produtos',
             'error'
         );
     }

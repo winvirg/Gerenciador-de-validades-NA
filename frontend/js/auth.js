@@ -1,8 +1,5 @@
 let adminLogado = false;
 
-const ADMIN_USER = 'admin';
-const ADMIN_PASS = '123456';
-
 const loginOverlay =
     document.getElementById(
         'loginOverlay'
@@ -77,7 +74,7 @@ function logout(){
     adminLogado = false;
 
     localStorage.removeItem(
-        'admin_logado'
+        'admin_token'
     );
 
     atualizarPermissoes();
@@ -110,13 +107,13 @@ loginOverlay.addEventListener(
 
 function verificarLoginSalvo(){
 
-    const salvo =
+    const token =
         localStorage.getItem(
-            'admin_logado'
+            'admin_token'
         );
 
     adminLogado =
-        salvo === 'true';
+        !!token;
 
     atualizarPermissoes();
 }
@@ -128,7 +125,8 @@ const formLogin =
 
 formLogin.addEventListener(
     'submit',
-    function(e){
+    async function(e){
+
         e.preventDefault();
 
         const user =
@@ -145,28 +143,62 @@ formLogin.addEventListener(
                 )
                 .value;
 
-        if(
-            user === ADMIN_USER &&
-            pass === ADMIN_PASS
-        ){
-            adminLogado = true;
+        try {
 
-            localStorage.setItem(
-                'admin_logado',
-                'true'
-            );
+            const resposta =
+                await fetch(
+                    `${API_BASE}/auth/login`,
+                    {
 
-            fecharLogin();
+                        method: 'POST',
 
-            atualizarPermissoes();
+                        headers: {
+                            'Content-Type':
+                                'application/json'
+                        },
+
+                        body: JSON.stringify({
+
+                            user,
+                            pass
+                        })
+                    }
+                );
+
+            const resultado =
+                await resposta.json();
+
+            if(resultado.sucesso){
+
+                adminLogado = true;
+
+                localStorage.setItem(
+                    'admin_token',
+                    resultado.token
+                );
+
+                fecharLogin();
+
+                atualizarPermissoes();
+
+                mostrarToast(
+                    'Login realizado!'
+                );
+
+            }else{
+
+                mostrarToast(
+                    'Usuário ou senha inválidos!',
+                    'error'
+                );
+            }
+
+        }catch(err){
+
+            console.error(err);
 
             mostrarToast(
-                'Login realizado!'
-            );
-
-        }else{
-             mostrarToast(
-                'Usuário ou senha inválidos!',
+                'Erro ao conectar ao servidor',
                 'error'
             );
         }
