@@ -1,5 +1,5 @@
 const API_URL =
-    'http://10.7.16.254:3000/produtos';
+    'http://10.7.80.7:3000/produtos';
 
 async function carregarProdutos() {
 
