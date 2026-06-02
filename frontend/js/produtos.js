@@ -1,46 +1,3 @@
-function salvar() {
-
-    salvarStorage();
-
-    renderizar();
-}
-
-function adicionarProduto(dados) {
-
-    produtos.push({
-        id: Date.now(),
-        ...dados
-    });
-
-    salvar();
-
-    mostrarToast(
-        'Produto adicionado!'
-    );
-}
-
-function atualizarProduto(id, dados) {
-
-    const index =
-        produtos.findIndex(
-            p => p.id === id
-        );
-
-    if (index !== -1) {
-
-        produtos[index] = {
-            ...produtos[index],
-            ...dados
-        };
-
-        salvar();
-
-        mostrarToast(
-            'Produto atualizado!'
-        );
-    }
-}
-
 async function deletar(id){
 
     if(
@@ -131,7 +88,7 @@ formProduto.addEventListener(
 
         if(editandoId){
 
-            await atualizarProduto(
+            await window.atualizarProduto(
                 editandoId,
                 dados
             );
@@ -156,3 +113,5 @@ formProduto.addEventListener(
         carregarProdutos();
     }
 );
+window.editar = editar;
+window.deletar = deletar;

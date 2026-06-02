@@ -1,4 +1,9 @@
+# DB
+*.db-journal
+backend/database.db
+
 # Logs
+logs/
 logs
 *.log
 npm-debug.log*
@@ -69,6 +74,7 @@ web_modules/
 .env
 .env.*
 !.env.example
+backend/.env
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache

@@ -140,36 +140,9 @@ async function enviarAlertas(
                     </small>
                 `;
 
-                let destinatarios = [];
-
-                if(dias === 30){
-
-                    destinatarios = [
-
-                        'gleidson.oliveira@nossoatacarejo.com.br',
-                        'pisomn@nossoatacarejo.com.br',
-                        'paulo1712023@gmail.com'
-                    ];
-                }
-
-                if(dias === 15){
-
-                    destinatarios = [
-
-                        'gleidson.oliveira@nossoatacarejo.com.br',
-                        'pisomn@nossoatacarejo.com.br',
-                        'paulo1712023@gmail.com'
-                    ];
-                }
-
-                if(dias === 3){
-
-                    destinatarios = [
-                        'gleidson.oliveira@nossoatacarejo.com.br',
-                        'pisomn@nossoatacarejo.com.br',
-                        'paulo1712023@gmail.com'
-                    ];
-                }
+                const destinatarios =
+                    process.env.EMAIL_DESTINATARIOS
+                        .split(',');
 
                 await enviarEmail(
 
