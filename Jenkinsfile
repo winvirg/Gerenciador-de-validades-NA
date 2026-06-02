@@ -1,4 +1,3 @@
-
 pipeline {
     agent any
 
@@ -51,6 +50,7 @@ pipeline {
                 }
             }
         }
+    }   // <- faltava esta chave
 
     post {
         success {
