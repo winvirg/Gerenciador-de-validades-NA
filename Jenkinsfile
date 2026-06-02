@@ -38,9 +38,7 @@ pipeline {
             steps {
                 dir('backend') {
                     sh '''
-                        pm2 describe $APP_NAME > /dev/null 2>&1
-
-                        if [ $? -eq 0 ]; then
+                        if pm2 describe $APP_NAME > /dev/null 2>&1; then
                             echo "Aplicação já existe. Reiniciando..."
                             pm2 restart $APP_NAME
                         else
@@ -53,7 +51,6 @@ pipeline {
                 }
             }
         }
-    }
 
     post {
         success {
