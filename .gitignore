@@ -1,4 +1,9 @@
+# DB
+*.db-journal
+backend/database.db
+
 # Logs
+logs/
 logs
 *.log
 npm-debug.log*
