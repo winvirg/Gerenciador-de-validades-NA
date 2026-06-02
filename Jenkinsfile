@@ -37,7 +37,7 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy Backend') {
             steps {
                 dir('backend') {
                     sh '''
@@ -54,7 +54,20 @@ pipeline {
                 }
             }
         }
-    }   // <- faltava esta chave
+
+        stage('Deploy Frontend') {
+            steps {
+                sh '''
+                    echo "Publicando frontend..."
+
+                    sudo rm -rf /var/www/html/*
+                    sudo cp -R frontend/* /var/www/html/
+
+                    echo "Frontend publicado com sucesso."
+                '''
+            }
+        }
+    }
 
     post {
         success {
