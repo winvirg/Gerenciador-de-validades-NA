@@ -41,15 +41,18 @@ pipeline {
             steps {
                 dir('backend') {
                     sh '''
-                        if pm2 describe $APP_NAME > /dev/null 2>&1; then
+                        export JENKINS_NODE_COOKIE=dontKillMe
+
+                        if pm2 describe "$APP_NAME" > /dev/null 2>&1; then
                             echo "Aplicação já existe. Reiniciando..."
-                            pm2 restart $APP_NAME
+                            pm2 restart "$APP_NAME"
                         else
                             echo "Aplicação não encontrada. Iniciando..."
-                            pm2 start server.js --name $APP_NAME
+                            pm2 start server.js --name "$APP_NAME"
                         fi
 
                         pm2 save
+                        pm2 list
                     '''
                 }
             }
