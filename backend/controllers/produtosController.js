@@ -162,6 +162,27 @@ exports.deletar = (req, res) => {
     );
 };
 
+exports.deletarTodos = (req, res) => {
+
+    db.run(
+        'DELETE FROM produtos',
+        [],
+        function(err){
+
+            if(err){
+
+                return res.status(500).json({
+                    erro: err.message
+                });
+            }
+
+            res.json({
+                sucesso: true
+            });
+        }
+    );
+};
+
 const {
     enviarAlertaManual
 } = require('../services/alertaService');

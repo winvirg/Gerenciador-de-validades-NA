@@ -31,4 +31,10 @@ router.delete(
     controller.deletar
 );
 
+router.delete(
+    '/',
+    auth,
+    controller.deletarTodos
+);
+
 module.exports = router;
