@@ -16,7 +16,10 @@ async function enviarEmail(
     html
 ){
     try {
-
+        console.log('EMAIL_USER:', process.env.EMAIL_USER);
+        console.log('EMAIL_PASS:', process.env.EMAIL_PASS ? 'OK' : 'VAZIO');
+        console.log('DESTINATARIOS:', destinatarios);
+    
         await transporter.sendMail({
 
             from: 'ti.moradanova@nossoatacarejo.com.br',
@@ -35,9 +38,10 @@ async function enviarEmail(
     } catch(err){
 
         console.error(
-            'Erro ao enviar email:',
-            err
+            'Erro ao enviar email:'
         );
+
+        console.error(err);
     }
 }
 
