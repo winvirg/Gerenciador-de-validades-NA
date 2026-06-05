@@ -24,7 +24,8 @@ function atualizarPermissoes(){
     const botoesRestritos = [
 
         'btnNovo',
-        'btnImportar'
+        'btnImportar',
+        'btnLimpar'
     ];
 
     botoesRestritos.forEach(id => {

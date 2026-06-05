@@ -133,3 +133,26 @@ async function deletarProduto(id){
         );
     }
 }
+
+async function deletarTodosProdutos(){
+
+    try {
+
+        await fetch(API_URL, {
+
+            method: 'DELETE',
+
+            headers:
+                obterHeaders()
+        });
+
+    } catch(err){
+
+        console.error(err);
+
+        mostrarToast(
+            'Erro ao limpar produtos',
+            'error'
+        );
+    }
+}

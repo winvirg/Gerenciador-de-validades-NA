@@ -17,6 +17,25 @@ async function deletar(id){
     );
 }
 
+async function limparBanco(){
+
+    if(
+        !confirm(
+            'Deseja apagar TODOS os produtos?'
+        )
+    ){
+        return;
+    }
+
+    await deletarTodosProdutos();
+
+    await carregarProdutos();
+
+    mostrarToast(
+        'Banco limpo!'
+    );
+}
+
 function editar(id) {
 
     const produto =
@@ -115,3 +134,4 @@ formProduto.addEventListener(
 );
 window.editar = editar;
 window.deletar = deletar;
+window.limparBanco = limparBanco;
