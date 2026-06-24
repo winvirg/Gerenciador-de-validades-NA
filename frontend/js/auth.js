@@ -25,7 +25,8 @@ function atualizarPermissoes(){
 
         'btnNovo',
         'btnImportar',
-        'btnLimpar'
+        'btnLimpar',
+        'btnDestinatarios'
     ];
 
     botoesRestritos.forEach(id => {

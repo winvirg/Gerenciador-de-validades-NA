@@ -24,6 +24,19 @@ function diasRestantes(data){
     );
 }
 
+function formatarData(data){
+
+    console.log('formatarData executou:', data);
+
+    const [
+        ano,
+        mes,
+        dia
+    ] = data.split('-');
+
+    return `${dia}/${mes}/${ano}`;
+}
+
 async function enviarAlertas(
     diasFiltro = null
 ){
@@ -123,8 +136,8 @@ async function enviarAlertas(
                             <td>${p.local}</td>
 
                             <td>${p.qtd}</td>
-
-                            <td>${p.validade}</td>
+                            
+                            <td>${formatarData(p.validade)}</td>
 
                         </tr>
                     `;
@@ -140,21 +153,52 @@ async function enviarAlertas(
                     </small>
                 `;
 
-                const destinatarios =
-                    process.env.EMAIL_DESTINATARIOS
-                        .split(',');
+                db.all(
 
-                await enviarEmail(
+    'SELECT email FROM destinatarios',
 
-                    destinatarios,
+    [],
 
-                    `Alerta de Validade - ${dias} dias`,
-                    html
-                );
+    async (err, rows) => {
 
-                console.log(
-                    `Email de ${dias} dias enviado`
-                );
+        if(err){
+
+            console.error(err);
+
+            return;
+        }
+
+        const destinatarios =
+            rows.map(
+                d => d.email
+            );
+
+        if(
+            destinatarios.length === 0
+        ){
+
+            console.log(
+                'Nenhum destinatário cadastrado'
+            );
+
+            return;
+        }
+
+        await enviarEmail(
+
+            destinatarios,
+
+            `Alerta de Validade - ${dias} dias`,
+
+            html
+        );
+
+        console.log(
+            `Email de ${dias} dias enviado`
+        );
+    }
+);
+
             }
         }
     );

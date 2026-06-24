@@ -1,29 +1,38 @@
 const nodemailer = require('nodemailer');
 
-const transporter = nodemailer.createTransport({
-
-    service: 'gmail',
-
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    }
-});
-
 async function enviarEmail(
     destinatarios,
     assunto,
     html
 ){
+
+    const transporter =
+        nodemailer.createTransport({
+
+            service: 'gmail',
+
+            auth: {
+
+                user:
+                    process.env.EMAIL_USER,
+
+                pass:
+                    process.env.EMAIL_PASS
+            }
+        });
+
     try {
 
         await transporter.sendMail({
 
-            from: 'ti.moradanova@nossoatacarejo.com.br',
+            from:
+                process.env.EMAIL_USER,
 
-            to: destinatarios.join(','),
+            to:
+                destinatarios.join(','),
 
-            subject: assunto,
+            subject:
+                assunto,
 
             html
         });
@@ -32,12 +41,16 @@ async function enviarEmail(
             'Email enviado!'
         );
 
+        return true;
+
     } catch(err){
 
         console.error(
             'Erro ao enviar email:',
             err
         );
+
+        throw err;
     }
 }
 

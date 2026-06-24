@@ -41,6 +41,28 @@ db.serialize(() => {
             recebido TEXT
         )
     `);
+
+    db.run(`
+
+        CREATE TABLE IF NOT EXISTS destinatarios (
+
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+            email TEXT NOT NULL UNIQUE
+        )
+    `);
+
+    db.run(`
+
+        CREATE TABLE IF NOT EXISTS usuarios (
+
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+            usuario TEXT NOT NULL UNIQUE,
+
+            senha_hash TEXT NOT NULL
+        )
+    `);
 });
 
 module.exports = db;
