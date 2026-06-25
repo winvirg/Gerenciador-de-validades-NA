@@ -1,28 +1,102 @@
-require('dotenv').config();
+const db =
+    require('../database/db');
 
-exports.login = (req, res) => {
+const bcrypt =
+    require('bcrypt');
+
+const jwt =
+    require('jsonwebtoken');
+
+exports.login = (
+
+    req,
+    res
+
+) => {
 
     const {
+
         user,
         pass
+
     } = req.body;
 
-    if(
-        user === process.env.ADM_USER &&
-        pass === process.env.ADM_PASS
-    ){
+    db.get(
 
-        return res.json({
+        `SELECT *
+         FROM usuarios
+         WHERE usuario = ?`,
 
-            sucesso: true,
+        [user],
 
-            token:
-                process.env.ADMIN_TOKEN
-        });
-    }
+        async (err, usuario) => {
 
-    res.status(401).json({
+            if(err){
 
-        sucesso: false
-    });
+                return res
+                    .status(500)
+                    .json({
+
+                        sucesso: false
+                    });
+            }
+
+            if(!usuario){
+
+                return res
+                    .status(401)
+                    .json({
+
+                        sucesso: false
+                    });
+            }
+
+            const senhaOk =
+                await bcrypt.compare(
+
+                    pass,
+
+                    usuario.senha_hash
+                );
+
+            if(!senhaOk){
+
+                return res
+                    .status(401)
+                    .json({
+
+                        sucesso: false
+                    });
+            }
+
+            const token =
+                jwt.sign(
+
+                    {
+
+                        id:
+                            usuario.id,
+
+                        usuario:
+                            usuario.usuario
+
+                    },
+
+                    'gerenciador-validades',
+
+                    {
+
+                        expiresIn:
+                            '7d'
+                    }
+                );
+
+            res.json({
+
+                sucesso: true,
+
+                token
+            });
+        }
+    );
 };

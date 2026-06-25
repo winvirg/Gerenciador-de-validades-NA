@@ -1,4 +1,5 @@
-require('dotenv').config();
+const jwt =
+    require('jsonwebtoken');
 
 module.exports = (
 
@@ -11,10 +12,7 @@ module.exports = (
     const token =
         req.headers.authorization;
 
-    if(
-        !token ||
-        token !== process.env.ADMIN_TOKEN
-    ){
+    if(!token){
 
         return res
             .status(401)
@@ -27,5 +25,31 @@ module.exports = (
             });
     }
 
-    next();
+    try {
+
+        const usuario =
+            jwt.verify(
+
+                token,
+
+                'gerenciador-validades'
+            );
+
+        req.usuario =
+            usuario;
+
+        next();
+
+    } catch(err){
+
+        return res
+            .status(401)
+            .json({
+
+                sucesso: false,
+
+                mensagem:
+                    'Token inválido'
+            });
+    }
 };
