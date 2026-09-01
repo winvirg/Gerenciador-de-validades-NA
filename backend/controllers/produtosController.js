@@ -1,6 +1,42 @@
 const db =
     require('../database/db');
 
+function identificarTipo(local){
+
+    if(!local)
+        return 'PULMAO';
+
+    const endereco =
+        local
+            .toUpperCase()
+            .trim();
+
+    if(
+        endereco.startsWith('CRC')
+    ){
+
+        return 'CRC';
+    }
+
+    const partes =
+        endereco.split('.');
+
+    if(
+
+        endereco.startsWith('V') &&
+
+        partes.length >= 3 &&
+
+        partes[2] === '1'
+
+    ){
+
+        return 'PICKING';
+    }
+
+    return 'PULMAO';
+}
+
 exports.listar = (req, res) => {
 
     db.all(
@@ -23,6 +59,7 @@ exports.listar = (req, res) => {
 exports.criar = (req, res) => {
 
     const {
+
         nome,
         local,
         qtd,
@@ -30,32 +67,42 @@ exports.criar = (req, res) => {
         status,
         validade,
         recebido
+
     } = req.body;
+
+    const tipo =
+        identificarTipo(local);
 
     db.run(
 
         `
         INSERT INTO produtos (
+
             nome,
             local,
             qtd,
             lote,
             status,
             validade,
-            recebido
+            recebido,
+            tipo
+
         )
 
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         `,
 
         [
+
             nome,
             local,
             qtd,
             lote,
             status,
             validade,
-            recebido
+            recebido,
+            tipo
+
         ],
 
         function(err){
@@ -82,6 +129,7 @@ exports.editar = (req, res) => {
     const { id } = req.params;
 
     const {
+
         nome,
         local,
         qtd,
@@ -89,7 +137,11 @@ exports.editar = (req, res) => {
         status,
         validade,
         recebido
+
     } = req.body;
+
+    const tipo =
+        identificarTipo(local);
 
     db.run(
 
@@ -104,12 +156,14 @@ exports.editar = (req, res) => {
             lote = ?,
             status = ?,
             validade = ?,
-            recebido = ?
+            recebido = ?,
+            tipo = ?
 
         WHERE id = ?
         `,
 
         [
+
             nome,
             local,
             qtd,
@@ -117,7 +171,9 @@ exports.editar = (req, res) => {
             status,
             validade,
             recebido,
+            tipo,
             id
+
         ],
 
         err => {
@@ -165,15 +221,22 @@ exports.deletar = (req, res) => {
 exports.deletarTodos = (req, res) => {
 
     db.run(
+
         'DELETE FROM produtos',
+
         [],
+
         function(err){
 
             if(err){
 
-                return res.status(500).json({
-                    erro: err.message
-                });
+                return res
+                    .status(500)
+                    .json({
+
+                        erro:
+                            err.message
+                    });
             }
 
             res.json({

@@ -95,7 +95,7 @@ function calcularStatus(validade) {
 
         return {
 
-            classe: 'danger',
+            classe: 'critico',
 
             texto: 'Crítico',
 
@@ -172,7 +172,7 @@ function verificarAlertas() {
             return (
                 status.classe === 'alert'
                 ||
-                status.classe === 'danger'
+                status.classe === 'critico'
             );
         });
 

@@ -237,6 +237,11 @@ function imprimirRelatorio() {
 
                     font-weight: bold;
                 }
+                
+                .critico{
+                    color: rgb(255,255,0);
+                    font-weight: bold;
+                }
 
                 .rodape{
 

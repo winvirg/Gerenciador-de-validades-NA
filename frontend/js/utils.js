@@ -48,7 +48,7 @@ function calcularStatus(dataStr) {
 
         return {
             dias,
-            classe: 'danger',
+            classe: 'critico',
             icon: 'fa-triangle-exclamation',
             texto: 'CRÍTICO'
         };

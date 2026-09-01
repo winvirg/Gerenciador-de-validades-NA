@@ -26,6 +26,15 @@ router.post(
     controller.criar
 );
 
+router.put(
+
+    '/:id',
+
+    auth,
+
+    controller.editar
+);
+
 router.delete(
     '/:id',
     auth,

@@ -27,7 +27,12 @@ exports.listar = (req, res) => {
 
 exports.criar = (req, res) => {
 
-    const { email } =
+    const { 
+        email,
+        alerta_crc,
+        alerta_picking,
+        alerta_pulmao
+     } =
         req.body;
 
     if(!email){
@@ -41,11 +46,26 @@ exports.criar = (req, res) => {
 
     db.run(
 
-        `INSERT INTO destinatarios
-         (email)
-         VALUES (?)`,
+        `INSERT INTO destinatarios (
 
-        [email],
+            email,
+
+            alerta_crc,
+
+            alerta_picking,
+
+            alerta_pulmao
+
+        )
+
+        VALUES (?, ?, ?, ?)`,
+
+        [
+            email,
+            alerta_crc,
+            alerta_picking,
+            alerta_pulmao
+        ],
 
         function(err){
 
@@ -62,6 +82,68 @@ exports.criar = (req, res) => {
                     this.lastID,
 
                 email
+            });
+        }
+    );
+};
+
+exports.editar = (req, res) => {
+
+    const { id } = req.params;
+
+    const {
+
+        alerta_crc,
+
+        alerta_picking,
+
+        alerta_pulmao
+
+    } = req.body;
+
+    db.run(
+
+        `UPDATE destinatarios
+
+        SET
+
+            alerta_crc = ?,
+
+            alerta_picking = ?,
+
+            alerta_pulmao = ?
+
+        WHERE id = ?`,
+
+        [
+
+            alerta_crc,
+
+            alerta_picking,
+
+            alerta_pulmao,
+
+            id
+
+        ],
+
+        function(err){
+
+            if(err){
+
+                console.error(err);
+
+                return res.status(500).json({
+
+                    erro: err.message
+
+                });
+            }
+
+            res.json({
+
+                sucesso: true
+
             });
         }
     );

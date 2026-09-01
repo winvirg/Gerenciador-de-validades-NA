@@ -38,7 +38,8 @@ function formatarData(data){
 }
 
 async function enviarAlertas(
-    diasFiltro = null
+    diasFiltro = null,
+    tipoFiltro = null
 ){
 
     db.all(
@@ -55,9 +56,26 @@ async function enviarAlertas(
 
             const alertas = {
 
-                30: [],
-                15: [],
-                3: []
+                PULMAO: {
+
+                    30: [],
+                    15: [],
+                    3: []
+                },
+
+                PICKING: {
+
+                    30: [],
+                    15: [],
+                    3: []
+                },
+
+                CRC: {
+
+                    30: [],
+                    15: [],
+                    3: []
+                }
             };
 
             produtos.forEach(produto => {
@@ -67,9 +85,15 @@ async function enviarAlertas(
                         produto.validade
                     );
 
-                if(alertas[dias]){
+                const tipo =
+                    produto.tipo || 'PULMAO';
 
-                    alertas[dias].push(
+                if(
+                    alertas[tipo] &&
+                    alertas[tipo][dias]
+                ){
+
+                    alertas[tipo][dias].push(
                         produto
                     );
                 }
@@ -80,148 +104,232 @@ async function enviarAlertas(
                 ? [diasFiltro]
                 : [30,15,3];
 
-            for(const dias of diasLista){
+const tipos =
 
-                const lista =
-                    alertas[dias];
+    tipoFiltro
 
-                if(!lista || lista.length === 0){
+        ? [tipoFiltro]
 
-                    console.log(
-                        `Nenhum produto para ${dias} dias`
-                    );
+        : [
 
-                    continue;
-                }
+            'PULMAO',
 
-                let html = `
+            'PICKING'
+        ];
 
-                    <h2>
-                        Produtos vencendo em ${dias} dias
-                    </h2>
+for(const tipo of tipos){
 
-                    <table
-                        border="1"
-                        cellpadding="8"
-                        cellspacing="0"
-                        style="
-                            border-collapse:collapse;
-                            font-family:Arial;
-                        "
-                    >
+    for(const dias of diasLista){
 
-                        <tr
-                            style="
-                                background:#0d2c8b;
-                                color:white;
-                            "
-                        >
+        const lista =
+            alertas[tipo][dias];
 
-                            <th>Produto</th>
-                            <th>Local</th>
-                            <th>Qtd</th>
-                            <th>Validade</th>
-
-                        </tr>
-                `;
-
-                lista.forEach(p => {
-
-                    html += `
-
-                        <tr>
-
-                            <td>${p.nome}</td>
-
-                            <td>${p.local}</td>
-
-                            <td>${p.qtd}</td>
-                            
-                            <td>${formatarData(p.validade)}</td>
-
-                        </tr>
-                    `;
-                });
-
-                html += `
-                    </table>
-
-                    <br>
-
-                    <small>
-                        Sistema Gerenciador de Validades
-                    </small>
-                `;
-
-                db.all(
-
-    'SELECT email FROM destinatarios',
-
-    [],
-
-    async (err, rows) => {
-
-        if(err){
-
-            console.error(err);
-
-            return;
-        }
-
-        const destinatarios =
-            rows.map(
-                d => d.email
-            );
-
-        if(
-            destinatarios.length === 0
-        ){
+        if(!lista || lista.length === 0){
 
             console.log(
-                'Nenhum destinatário cadastrado'
+                `Nenhum produto ${tipo} para ${dias} dias`
             );
 
-            return;
+            continue;
         }
 
-        await enviarEmail(
+        let html = `
 
-            destinatarios,
+            <h2>
+                Produtos do ${tipo} vencendo em ${dias} dias
+            </h2>
 
-            `Alerta de Validade - ${dias} dias`,
+            <table
+                border="1"
+                cellpadding="8"
+                cellspacing="0"
+                style="
+                    border-collapse:collapse;
+                    font-family:Arial;
+                "
+            >
 
-            html
-        );
+                <tr
+                    style="
+                        background:#0d2c8b;
+                        color:white;
+                    "
+                >
 
-        console.log(
-            `Email de ${dias} dias enviado`
+                    <th>Produto</th>
+                    <th>Local</th>
+                    <th>Qtd</th>
+
+                    ${tipo === 'CRC'
+                        ? '<th>Recebimento</th>'
+                        : ''
+                    }
+
+                    <th>Validade</th>
+
+                </tr>
+        `;
+
+        lista.forEach(p => {
+
+            html += `
+
+                <tr>
+
+                    <td>${p.nome}</td>
+
+                    <td>${p.local}</td>
+
+                    <td>${p.qtd}</td>
+
+                    ${tipo === 'CRC'
+                        ? `<td>${formatarData(p.recebido)}</td>`
+                        : ''
+                    }
+
+                    <td>${formatarData(p.validade)}</td>
+
+                </tr>
+            `;
+        });
+
+        html += `
+            </table>
+
+            <br>
+
+            <small>
+                Sistema Gerenciador de Validades
+            </small>
+        `;
+
+        const colunaAlerta = {
+
+            CRC: 'alerta_crc',
+
+            PICKING: 'alerta_picking',
+
+            PULMAO: 'alerta_pulmao'
+
+        }[tipo];
+
+        db.all(
+
+            `SELECT email
+            FROM destinatarios
+            WHERE ${colunaAlerta} = 1`,
+
+            [],
+
+            async (err, rows) => {
+
+                if(err){
+
+                    console.error(err);
+
+                    return;
+                }
+
+                const destinatarios =
+
+                    rows.map(
+                        d => d.email
+                    );
+
+                if(destinatarios.length === 0){
+
+                    console.log(
+
+                        `Nenhum destinatário para ${tipo}`
+
+                    );
+
+                    return;
+                }
+
+                await enviarEmail(
+
+                    destinatarios,
+
+                    `Alerta ${tipo} - ${dias} dias`,
+
+                    html
+                );
+
+                console.log(
+
+                    `Email ${tipo} ${dias} dias enviado`
+
+                );
+            }
         );
     }
-);
+}
 
-            }
         }
     );
 }
 
 async function enviarAlertaManual(
-    dias
+    dias,
+    tipo = null
 ){
 
     await enviarAlertas(
-        dias
+        dias,
+        tipo
     );
 }
 
+// Pulmão + Picking
+
 cron.schedule(
+
     '0 8,14 * * *',
+
     () => {
 
         console.log(
-            'Verificando alertas automáticos...'
+            'Alerta Pulmão/Picking'
         );
 
         enviarAlertas();
+    }
+);
+
+// CRC
+
+cron.schedule(
+
+    '0 7,12 * * *',
+
+    () => {
+
+        console.log(
+            'Alerta CRC'
+        );
+
+        enviarAlertas(
+            null,
+            'CRC'
+        );
+    }
+);
+
+cron.schedule(
+
+    '40 9 * * *',
+
+    () => {
+
+        console.log(
+            'Alerta CRC'
+        );
+
+        enviarAlertas(
+            null,
+            'CRC'
+        );
     }
 );
 

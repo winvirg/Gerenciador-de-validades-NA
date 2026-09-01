@@ -161,6 +161,39 @@
         <!-- TOOLBAR -->
         <div class="toolbar">
 
+        <!-- BOTOES DE ESCOLHA DE TIPO DE ETIQUETA -->
+        <div class="tipo-endereco-group">
+
+            <button
+                id="btnPulmao"
+                class="btn-outline tipo-endereco active"
+            >
+                Pulmão
+            </button>
+
+            <button
+                id="btnPicking"
+                class="btn-outline tipo-endereco"
+            >
+                Picking
+            </button>
+
+            <button
+                id="btnCRC"
+                class="btn-outline tipo-endereco"
+            >
+                CRC
+            </button>
+
+            <!-- <button
+                id="btnAcougue"
+                class="btn-outline tipo-endereco"
+            >
+                Açougue
+            </button> -->
+
+        </div>
+
             <h1>
                 <i class="fas fa-warehouse"></i>
                 Controle de Produtos
@@ -212,6 +245,10 @@
 
                     <option value="danger">
                         Vencidos
+                    </option>
+
+                    <option value="critico">
+                        Criticos
                     </option>
 
                 </select>
@@ -536,18 +573,9 @@
 
         </div>
 
-        <div class="form-group">
+        <div class="destinatario-topo">
 
-            <label>
-                Novo Destinatário
-            </label>
-
-            <div
-                style="
-                    display:flex;
-                    gap:10px;
-                "
-            >
+            <div class="destinatario-input">
 
                 <input
                     type="email"
@@ -565,15 +593,48 @@
 
             </div>
 
+            <div class="destinatario-alertas">
+
+                <label>
+
+                    <input
+                        type="checkbox"
+                        id="alertaCRC"
+                    >
+
+                    CRC
+
+                </label>
+
+                <label>
+
+                    <input
+                        type="checkbox"
+                        id="alertaPicking"
+                    >
+
+                    Picking
+
+                </label>
+
+                <label>
+
+                    <input
+                        type="checkbox"
+                        id="alertaPulmao"
+                    >
+
+                    Pulmão
+
+                </label>
+
+            </div>
+
         </div>
 
         <div
             id="listaDestinatarios"
-            style="
-                margin-top:20px;
-                max-height:300px;
-                overflow:auto;
-            "
+            class="lista-destinatarios"
         ></div>
 
     </div>

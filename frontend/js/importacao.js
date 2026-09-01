@@ -46,7 +46,8 @@ async function processarCSV(text) {
         let registro =
             registroOriginal.trim();
 
-        if (!registro) continue;
+        if (!registro)
+            continue;
 
         const colunas =
             registro.split(';');
@@ -77,48 +78,65 @@ async function processarCSV(text) {
         const validade =
             colunas[15]?.trim();
 
-        if (
+        if(
             !nome ||
             !local ||
             !validade
-        ) {
+        ){
+            continue;
+        }
+
+        // Ignora quantidade zero
+
+        if(qtd <= 0){
             continue;
         }
 
         const localMaiusculo =
             local.toUpperCase();
 
-        if (
-            localMaiusculo.includes('PICKING')
-            ||
-            localMaiusculo.includes('CRC')
-        ) {
+        // Ignora endereços 098.01
+
+        if(
+            localMaiusculo.startsWith(
+                '098.01'
+            )
+        ){
             continue;
         }
 
+        // Aceita apenas CRC, D... e V...
+
         const enderecoValido =
+
+            /^CRC/i.test(
+                localMaiusculo
+            )
+
+            ||
+
             /^(D|V)\d+/i.test(
                 localMaiusculo
             );
 
-        if (!enderecoValido)
+        if(!enderecoValido)
             continue;
 
         let dataFormatada = '';
 
-        if (validade.includes('/')) {
+        if(validade.includes('/')){
 
             const partes =
                 validade.split('/');
 
-            if (partes.length === 3) {
+            if(partes.length === 3){
 
                 dataFormatada =
                     `${partes[2]}-${partes[1].padStart(2,'0')}-${partes[0].padStart(2,'0')}`;
             }
         }
 
-        if (!dataFormatada)
+        if(!dataFormatada)
             continue;
 
         const existe =
@@ -130,7 +148,8 @@ async function processarCSV(text) {
                 p.recebido === recebido
             );
 
-        if (existe) continue;
+        if(existe)
+            continue;
 
         const novoProduto = {
 
@@ -147,7 +166,7 @@ async function processarCSV(text) {
             status: statusSistema,
 
             validade: dataFormatada,
-            
+
             recebido
         };
 

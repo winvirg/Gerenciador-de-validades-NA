@@ -1,7 +1,44 @@
+function selecionarTipo(tipo){
+
+    tipoEnderecoSelecionado = tipo;
+
+    document
+        .querySelectorAll('.tipo-endereco')
+        .forEach(btn =>
+
+            btn.classList.remove(
+                'active'
+            )
+        );
+
+    document
+        .getElementById(
+
+            tipo === 'PULMAO'
+            ? 'btnPulmao'
+
+            : tipo === 'PICKING'
+            ? 'btnPicking'
+
+            : tipo === 'ACOUGUE'
+            ? 'btnAcougue'
+
+            : 'btnCRC'
+
+        )
+        .classList.add(
+            'active'
+        );
+
+    renderizar();
+}
+
 document.addEventListener(
+
     'DOMContentLoaded',
+
     () => {
-        
+
         document
             .getElementById('btnLogin')
             .addEventListener(
@@ -14,6 +51,27 @@ document.addEventListener(
             .addEventListener(
                 'click',
                 logout
+            );
+
+        document
+            .getElementById('btnCRC')
+            .addEventListener(
+                'click',
+                () => selecionarTipo('CRC')
+            );
+
+        document
+            .getElementById('btnPulmao')
+            .addEventListener(
+                'click',
+                () => selecionarTipo('PULMAO')
+            );
+
+        document
+            .getElementById('btnPicking')
+            .addEventListener(
+                'click',
+                () => selecionarTipo('PICKING')
             );
 
         document
@@ -76,6 +134,10 @@ document.addEventListener(
             verificarAlertas();
 
             verificarLoginSalvo();
+
+            selecionarTipo(
+                tipoEnderecoSelecionado
+            );
 
         })();
     }

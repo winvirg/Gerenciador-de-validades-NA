@@ -42,13 +42,71 @@ db.serialize(() => {
         )
     `);
 
+    db.all(
+
+        `PRAGMA table_info(produtos)`,
+
+        [],
+
+        (err, columns) => {
+
+            if(err){
+
+                console.error(err);
+
+                return;
+            }
+
+            const existeTipo =
+                columns.some(
+
+                    coluna =>
+
+                        coluna.name ===
+                        'tipo'
+                );
+
+            if(!existeTipo){
+
+                db.run(
+
+                    `ALTER TABLE produtos
+                     ADD COLUMN tipo TEXT`,
+
+                    err => {
+
+                        if(err){
+
+                            console.error(
+                                'Erro ao criar coluna tipo:',
+                                err
+                            );
+
+                        }else{
+
+                            console.log(
+                                'Coluna tipo criada.'
+                            );
+                        }
+                    }
+                );
+            }
+        }
+    );
+
     db.run(`
 
         CREATE TABLE IF NOT EXISTS destinatarios (
 
             id INTEGER PRIMARY KEY AUTOINCREMENT,
 
-            email TEXT NOT NULL UNIQUE
+            email TEXT NOT NULL UNIQUE,
+
+            alerta_crc INTEGER NOT NULL DEFAULT 1,
+
+            alerta_picking INTEGER NOT NULL DEFAULT 1,
+
+            alerta_pulmao INTEGER NOT NULL DEFAULT 1
         )
     `);
 

@@ -111,9 +111,7 @@ function renderizarDestinatarios(
         );
 
     if(!lista.length){
-
-        container.innerHTML = `
-
+            container.innerHTML = `
             <p>
                 Nenhum destinatário cadastrado
             </p>
@@ -122,34 +120,75 @@ function renderizarDestinatarios(
         return;
     }
 
-    container.innerHTML =
-        lista.map(d => `
+        container.innerHTML =
+            lista.map(d => `
 
-            <div
-                style="
-                    display:flex;
-                    justify-content:space-between;
-                    align-items:center;
-                    padding:10px;
-                    border-bottom:1px solid #ddd;
-                "
-            >
+                <div class="destinatario-item">
 
-                <span>
-                    ${d.email}
-                </span>
+                    <div class="destinatario-info">
 
-                <button
-                    class="btn-danger-outline"
-                    onclick="removerDestinatario(${d.id})"
-                >
-                    <i class="fas fa-trash"></i>
-                </button>
+                        <div class="destinatario-top-row">
 
-            </div>
+                            <div class="destinatario-email">
 
-        `).join('');
-}
+                                ${d.email}
+
+                            </div>
+
+                            <button
+                                class="btn-danger-outline"
+                                onclick="removerDestinatario(${d.id})"
+                            >
+
+                                <i class="fas fa-trash"></i>
+
+                            </button>
+
+                        </div>
+
+                        <div class="destinatario-opcoes">
+
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    ${d.alerta_crc ? 'checked' : ''}
+                                    onchange="alterarAlertas(${d.id}, this)"
+                                    data-tipo="crc"
+                                >
+                                CRC
+                            </label>
+
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    ${d.alerta_picking ? 'checked' : ''}
+                                    onchange="alterarAlertas(${d.id}, this)"
+                                    data-tipo="picking"
+                                >
+                                Picking
+                            </label>
+
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    ${d.alerta_pulmao ? 'checked' : ''}
+                                    onchange="alterarAlertas(${d.id}, this)"
+                                    data-tipo="pulmao"
+                                >
+                                Pulmão
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            `).join('');
+
+        return;
+    }
+
 
 async function adicionarDestinatario(){
 
@@ -195,7 +234,22 @@ async function adicionarDestinatario(){
 
                     body: JSON.stringify({
 
-                        email
+                        email,
+
+                        alerta_crc:
+                            document.getElementById(
+                                'alertaCRC'
+                            ).checked ? 1 : 0,
+
+                        alerta_picking:
+                            document.getElementById(
+                                'alertaPicking'
+                            ).checked ? 1 : 0,
+
+                        alerta_pulmao:
+                            document.getElementById(
+                                'alertaPulmao'
+                            ).checked ? 1 : 0
                     })
                 }
             );
@@ -208,6 +262,18 @@ async function adicionarDestinatario(){
         }
 
         input.value = '';
+
+        document.getElementById(
+            'alertaCRC'
+        ).checked = true;
+
+        document.getElementById(
+            'alertaPicking'
+        ).checked = true;
+
+        document.getElementById(
+            'alertaPulmao'
+        ).checked = true;
 
         await carregarDestinatarios();
 
@@ -272,5 +338,83 @@ async function removerDestinatario(id){
         );
     }
 }
-window.removerDestinatario =
-    removerDestinatario;
+
+async function alterarAlertas(
+    id,
+    checkbox
+){
+
+    const item =
+        checkbox.closest(
+            '.destinatario-item'
+        );
+
+    const checkboxes =
+        item.querySelectorAll(
+            'input[type="checkbox"]'
+        );
+
+    const dados = {
+
+        alerta_crc:
+            checkboxes[0].checked ? 1 : 0,
+
+        alerta_picking:
+            checkboxes[1].checked ? 1 : 0,
+
+        alerta_pulmao:
+            checkboxes[2].checked ? 1 : 0
+    };
+
+    try{
+
+        const resposta =
+            await fetch(
+
+                `${DESTINATARIOS_URL}/${id}`,
+
+                {
+
+                    method: 'PUT',
+
+                    headers: {
+
+                        'Content-Type':
+                            'application/json',
+
+                        authorization:
+                            localStorage.getItem(
+                                'admin_token'
+                            )
+                    },
+
+                    body: JSON.stringify(
+                        dados
+                    )
+                }
+            );
+
+        if(!resposta.ok){
+
+            throw new Error();
+        }
+
+        mostrarToast(
+            'Preferências atualizadas!'
+        );
+
+    }catch(err){
+
+        console.error(err);
+
+        mostrarToast(
+            'Erro ao atualizar',
+            'error'
+        );
+
+        carregarDestinatarios();
+    }
+}
+
+window.alterarAlertas =
+    alterarAlertas;

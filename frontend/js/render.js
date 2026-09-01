@@ -22,6 +22,14 @@ function obterProdutosFiltrados() {
             new Date(b.validade)
     );
 
+ lista = lista.filter(
+
+    p =>
+
+        p.tipo ===
+        tipoEnderecoSelecionado
+);
+
     if (busca) {
 
         lista = lista.filter(p =>
@@ -147,6 +155,7 @@ function renderizar() {
                         ${p.nome}
                     </div>
 
+
                     ${adminLogado ? `
                     <div class="card-actions">
 
@@ -176,43 +185,107 @@ function renderizar() {
 
                 <div class="card-info">
 
-                    <div class="info-item full">
+                    ${
+                        ['CRC', 'PICKING'].includes(p.tipo)
 
-                        <div class="info-label">
-                            Localização
-                        </div>
+                            ? `
 
-                        <div class="info-value">
-                            ${p.local}
-                        </div>
+                                <div class="info-item">
 
-                    </div>
+                                    <div class="info-label">
+                                        Localização
+                                    </div>
 
-                    <div class="info-item">
+                                    <div class="info-value">
+                                        ${p.local}
+                                    </div>
 
-                        <div class="info-label">
-                            Estoque
-                        </div>
+                                </div>
 
-                        <div class="info-value">
-                            ${p.qtd}
-                        </div>
+                                <div class="info-item">
 
-                    </div>
+                                    <div class="info-label">
+                                        Estoque
+                                    </div>
 
-                    <div class="info-item">
+                                    <div class="info-value">
+                                        ${p.qtd}
+                                    </div>
 
-                        <div class="info-label">
-                            Validade
-                        </div>
+                                </div>
 
-                        <div class="info-value">
-                            ${formatarData(
-                                p.validade
-                            )}
-                        </div>
+                                <div class="info-item">
 
-                    </div>
+                                    <div class="info-label">
+                                        Validade
+                                    </div>
+
+                                    <div class="info-value">
+                                        ${formatarData(
+                                            p.validade
+                                        )}
+                                    </div>
+
+                                </div>
+
+                                <div class="info-item">
+
+                                    <div class="info-label">
+                                        Recebido
+                                    </div>
+
+                                    <div class="info-value">
+                                        ${formatarData(
+                                            p.recebido
+                                        )}
+                                    </div>
+
+                                </div>
+
+                            `
+
+                            : `
+
+                                <div class="info-item full">
+
+                                    <div class="info-label">
+                                        Localização
+                                    </div>
+
+                                    <div class="info-value">
+                                        ${p.local}
+                                    </div>
+
+                                </div>
+
+                                <div class="info-item">
+
+                                    <div class="info-label">
+                                        Estoque
+                                    </div>
+
+                                    <div class="info-value">
+                                        ${p.qtd}
+                                    </div>
+
+                                </div>
+
+                                <div class="info-item">
+
+                                    <div class="info-label">
+                                        Validade
+                                    </div>
+
+                                    <div class="info-value">
+                                        ${formatarData(
+                                            p.validade
+                                        )}
+                                    </div>
+
+                                </div>
+
+                            `
+                    }
 
                 </div>
 
