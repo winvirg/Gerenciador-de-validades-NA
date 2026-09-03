@@ -7,7 +7,10 @@ const db = new sqlite3.Database(
 
         if(err){
 
-            console.error(err);
+            console.error(
+                'Erro ao conectar ao banco:',
+                err
+            );
 
         }else{
 
@@ -38,61 +41,11 @@ db.serialize(() => {
 
             validade TEXT,
 
-            recebido TEXT
+            recebido TEXT,
+
+            tipo TEXT
         )
     `);
-
-    db.all(
-
-        `PRAGMA table_info(produtos)`,
-
-        [],
-
-        (err, columns) => {
-
-            if(err){
-
-                console.error(err);
-
-                return;
-            }
-
-            const existeTipo =
-                columns.some(
-
-                    coluna =>
-
-                        coluna.name ===
-                        'tipo'
-                );
-
-            if(!existeTipo){
-
-                db.run(
-
-                    `ALTER TABLE produtos
-                     ADD COLUMN tipo TEXT`,
-
-                    err => {
-
-                        if(err){
-
-                            console.error(
-                                'Erro ao criar coluna tipo:',
-                                err
-                            );
-
-                        }else{
-
-                            console.log(
-                                'Coluna tipo criada.'
-                            );
-                        }
-                    }
-                );
-            }
-        }
-    );
 
     db.run(`
 
@@ -121,6 +74,7 @@ db.serialize(() => {
             senha_hash TEXT NOT NULL
         )
     `);
+
 });
 
 module.exports = db;
