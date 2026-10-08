@@ -179,6 +179,9 @@ async function processarCSV(text) {
 
             novoProduto.id =
                 resultado.id;
+            
+            novoProduto.tipo =
+                resultado.tipo;
 
             produtos.push(
                 novoProduto

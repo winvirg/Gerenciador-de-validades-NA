@@ -117,7 +117,7 @@ exports.criar = (req, res) => {
             res.json({
 
                 id: this.lastID,
-
+                tipo: tipo,
                 sucesso: true
             });
         }
